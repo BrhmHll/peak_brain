@@ -31,8 +31,8 @@ class _HomeState extends State<Home> {
         backgroundColor: gmBGColor,
         body: Container(
           padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 15,
+            horizontal: 10,
+            vertical: 5,
           ),
           child: Column(
             children: [
@@ -48,40 +48,39 @@ class _HomeState extends State<Home> {
   }
 
   Widget buildBody() {
-    return SizedBox(
-      height: size.height - 110,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: size.width * 0.20,
-                childAspectRatio: 1,
-                crossAxisSpacing: 60,
-                mainAxisSpacing: 10),
-            itemCount: 26,
-            itemBuilder: (_, index) {
-              return buildGameButton(index);
-            }),
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 5,
       ),
+      height: size.height - 95,
+      child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: size.width * 0.3,
+              childAspectRatio: 1,
+              crossAxisSpacing: size.width * 0.1,
+              mainAxisSpacing: 8),
+          itemCount: 26,
+          itemBuilder: (_, index) {
+            return buildGameButton(index);
+          }),
     );
   }
 
   Widget buildGameButton(int index) {
     var gameName = "game" + (index + 1).toString();
-    if (index == 26) {
-      return Container();
-    }
     return Container(
         height: size.width * 0.20,
-        width: size.width * 0.20,
+        width: size.width * 0.2,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(size.width * 0.1)),
+            borderRadius: BorderRadius.all(Radius.circular(size.width * 0.2)),
             color: gmPriColor),
         child: IconButton(
           onPressed: () {
             Navigator.pushNamed(context, '/' + gameName);
           },
-          icon: Image.asset("assets/images/" + gameName + ".png"),
+          icon: Image.asset("assets/images/" + gameName + ".png",
+              width: size.width * 0.135),
         ));
   }
 
@@ -178,7 +177,7 @@ class _HomeState extends State<Home> {
 
   SizedBox buildTop() {
     return SizedBox(
-      height: 50,
+      height: 60,
       child: Row(
         children: [
           Image.asset("assets/images/peakbrain_logo_blue.png", height: 48),

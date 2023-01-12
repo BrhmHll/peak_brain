@@ -25,6 +25,7 @@ class _Game18State extends State<Game18> {
     [gmPriColor, gmPriColor, gmPriColor, gmPriColor],
     [gmPriColor, gmPriColor, gmPriColor, gmPriColor]
   ];
+  int winnerPlayer = -1;
   List<Question> questions = [];
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,7 @@ class _Game18State extends State<Game18> {
     if (questions.isNotEmpty) {
       return;
     }
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < targetPoint; i++) {
       createQuestion();
     }
     setState(() {
@@ -96,20 +97,24 @@ class _Game18State extends State<Game18> {
     });
   }
 
-  List<String> createAnswers(correctAnswer) {
-    List<String> result = [correctAnswer.toInt().toString()];
-    while (result.length != 4) {
-      var wrongAnswer = (correctAnswer + random.nextInt(10)).toInt().toString();
+  List<String> createAnswers(int correctAnswer) {
+    List<String> result = [];
+
+    while (result.length != 3) {
+      var wrongAnswer =
+          (correctAnswer + random.nextInt(21) - 10).toInt().toString();
       var isAdded = false;
       for (var item in result) {
         if (item == wrongAnswer) {
           isAdded = true;
         }
       }
-      if (isAdded == false) {
+      if (isAdded == false && wrongAnswer != correctAnswer.toString()) {
         result.add(wrongAnswer);
       }
     }
+    var correctAnswerIndex = random.nextInt(3);
+    result.insert(correctAnswerIndex, correctAnswer.toString());
     return result;
   }
 
@@ -132,30 +137,65 @@ class _Game18State extends State<Game18> {
                       borderRadius: BorderRadius.only(
                           bottomRight: Radius.circular(5),
                           topRight: Radius.circular(5))),
-                  child: Text(point == 0 ? "" : (point).toString(),
+                  child: Text(point == 0 ? "" : " " + (point).toString(),
                       style: answerTextStyle),
                 ),
               ),
             ],
           ),
-          Center(
-            child: SizedBox(
-              height: size.height * 0.128,
-              child: Center(
-                  child: Text(questions[questionIndex].questionText,
-                      style: questionTextStyle)),
+          Visibility(
+            visible: winnerPlayer == -1,
+            child: Center(
+              child: SizedBox(
+                height: size.height * 0.128,
+                child: Center(
+                    child: Text(questions[questionIndex].questionText,
+                        style: questionTextStyle)),
+              ),
             ),
           ),
-          Center(
-              child: Container(
-                  child: AnswerButtons(
-            size: Size(size.width * 0.955, size.height * 0.25),
-            buttonTexts: questions[questionIndex].answers,
-            buttonPress: (buttonWidget) {
-              onPressAnswer(buttonWidget, questionIndex, player);
-            },
-            buttonColors: buttonColors[player],
-          ))),
+          Visibility(
+            visible: winnerPlayer == -1,
+            child: Center(
+                child: Container(
+                    child: AnswerButtons(
+              size: Size(size.width * 0.955, size.height * 0.25),
+              buttonTexts: questions[questionIndex].answers,
+              buttonPress: (buttonWidget) {
+                onPressAnswer(buttonWidget, questionIndex, player);
+              },
+              buttonColors: buttonColors[player],
+            ))),
+          ),
+          Visibility(
+              visible: winnerPlayer == player,
+              child: Center(
+                child: Container(
+                    height: size.height * 0.25,
+                    child: Image.asset(
+                      "assets/images/cup.jpeg",
+                      width: size.width * 0.2,
+                    )),
+              )),
+          Visibility(
+              visible: winnerPlayer == player,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                      height: size.height * 0.1,
+                      child: IconButton(
+                        onPressed: () {
+                          restartGame();
+                        },
+                        icon: Image.asset(
+                          "assets/images/restart.jpeg",
+                          width: size.width * 0.15,
+                        ),
+                        iconSize: size.width * 0.15,
+                      )),
+                ),
+              )),
         ],
       ),
     );
@@ -189,13 +229,30 @@ class _Game18State extends State<Game18> {
       if (playersPoint[player] != 0) {
         setState(() {
           playersPoint[player] -= 1;
-          buttonColors[player][buttonWidget.index] = Colors.red;
         });
       }
+      setState(() {
+        buttonColors[player][buttonWidget.index] = Colors.red;
+      });
     }
   }
 
   void win(int playerIndex) {
     print("WINNNNN!");
+    setState(() {
+      winnerPlayer = playerIndex;
+    });
+  }
+
+  void restartGame() {
+    playersIndex = [0, 0];
+    playersPoint = [0, 0];
+    buttonColors = [
+      [gmPriColor, gmPriColor, gmPriColor, gmPriColor],
+      [gmPriColor, gmPriColor, gmPriColor, gmPriColor]
+    ];
+    winnerPlayer = -1;
+    questions = [];
+    createQuestions();
   }
 }

@@ -32,13 +32,13 @@ class _CustomAnswerButtonState extends State<CustomAnswerButton> {
         height: widget.size.height,
         decoration: BoxDecoration(
             color: widget.bgColor, borderRadius: BorderRadius.circular(5)),
-        child: GestureDetector(
+        child: TextButton(
           child: Container(
               width: widget.size.width,
               height: widget.size.height,
               child: Center(
                   child: Text(widget.buttonText, style: answerTextStyle))),
-          onTap: () {
+          onPressed: () {
             widget.buttonPress(widget);
           },
         ),
