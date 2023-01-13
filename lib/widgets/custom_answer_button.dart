@@ -18,13 +18,6 @@ class CustomAnswerButton extends StatefulWidget {
   final Null Function(CustomAnswerButton widget) buttonPress;
   Color bgColor;
 
-  static const List<Color> defaultButtonColors = [
-    gmPriColor,
-    gmPriColor,
-    gmPriColor,
-    gmPriColor
-  ];
-
   @override
   State<CustomAnswerButton> createState() => _CustomAnswerButtonState();
 }

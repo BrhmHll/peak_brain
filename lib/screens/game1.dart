@@ -7,6 +7,8 @@ import 'package:peak_brain/constants/styles.dart';
 import 'package:peak_brain/widgets/answer_buttons.dart';
 import 'package:peak_brain/widgets/custom_answer_button.dart';
 import 'package:peak_brain/widgets/page_template.dart';
+import 'package:peak_brain/widgets/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Game1 extends StatefulWidget {
   Game1({Key? key}) : super(key: key);
@@ -16,7 +18,9 @@ class Game1 extends StatefulWidget {
 }
 
 class _Game1State extends State<Game1> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   var size = const Size(0, 0);
+  int bestScore = 0;
   int playerPoint = 0;
   int answerTime = 10;
   var questionText = "";
@@ -25,7 +29,8 @@ class _Game1State extends State<Game1> {
   var random = Random();
   Timer timer = Timer(Duration.zero, () => {});
   bool timerDefined = false;
-  List<Color> buttonColors = CustomAnswerButton.defaultButtonColors;
+  bool gameOver = false;
+  List<Color> buttonColors = AnswerButtons.defaultButtonColors;
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
@@ -38,60 +43,141 @@ class _Game1State extends State<Game1> {
     }
 
     return PageTemplate(
-        content: Column(
-      children: [
-        SizedBox(
-          height: size.height * 0.1,
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset(
-                  "assets/images/timer_blue.png",
-                  width: size.width * 0.1,
-                ),
-              ),
-              Text(
-                answerTime.toString(),
-                style: questionTextStyle,
-              ),
-              Expanded(child: Container()),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset(
-                  "assets/images/cup.png",
-                  width: size.width * 0.1,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  playerPoint.toString(),
-                  style: questionTextStyle,
-                ),
+        content: gameOver
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 150,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Score: ",
+                                style: TextStyle(
+                                    color: gmWhiteColor, fontSize: 24),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  playerPoint.toString(),
+                                  style: questionTextStyle,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset(
+                            "assets/images/cup.png",
+                            width: size.width * 0.2,
+                          ),
+                        ),
+                        Container(
+                          width: 150,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Best Score: ",
+                                style: TextStyle(
+                                    color: gmWhiteColor, fontSize: 24),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  bestScore.toString(),
+                                  style: questionTextStyle,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Widgets.buildRestartButton(
+                            restartFunc: () {
+                              setState(() {
+                                playerPoint = 0;
+                                answerTime = 10;
+                                timerDefined = false;
+                                gameOver = false;
+                                buttonColors =
+                                    AnswerButtons.defaultButtonColors;
+                              });
+                            },
+                            size: size.width * 0.2),
+                      )
+                    ],
+                  )
+                ],
               )
-            ],
-          ),
-        ),
-        SizedBox(
-          height: size.height * 0.58,
-          child: Center(
-            child: SizedBox(
-              height: size.height * 0.128,
-              child:
-                  Center(child: Text(questionText, style: questionTextStyle)),
-            ),
-          ),
-        ),
-        AnswerButtons(
-            size: Size(size.width * 0.955, size.height * 0.25),
-            buttonTexts: answers,
-            buttonPress: ((widget) {
-              onPressAnswer(widget);
-            }),
-            buttonColors: buttonColors)
-      ],
-    ));
+            : Column(
+                children: [
+                  SizedBox(
+                    height: size.height * 0.1,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset(
+                            "assets/images/timer_blue.png",
+                            width: size.width * 0.1,
+                          ),
+                        ),
+                        Text(
+                          answerTime.toString(),
+                          style: questionTextStyle,
+                        ),
+                        Expanded(child: Container()),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset(
+                            "assets/images/cup.png",
+                            width: size.width * 0.1,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            playerPoint.toString(),
+                            style: questionTextStyle,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.58,
+                    child: Center(
+                      child: SizedBox(
+                        height: size.height * 0.128,
+                        child: Center(
+                            child:
+                                Text(questionText, style: questionTextStyle)),
+                      ),
+                    ),
+                  ),
+                  AnswerButtons(
+                      size: Size(size.width * 0.955, size.height * 0.25),
+                      buttonTexts: answers,
+                      buttonPress: ((widget) {
+                        onPressAnswer(widget);
+                      }),
+                      buttonColors: buttonColors)
+                ],
+              ));
   }
 
   timerFunc(p_timer) {
@@ -108,16 +194,30 @@ class _Game1State extends State<Game1> {
     if (buttonWidget.buttonText == correctAnswer) {
       setState(() {
         playerPoint += 10;
+        answerTime = 10;
       });
+
       createQuestion();
     } else {
       endGame();
     }
   }
 
-  endGame() {
+  endGame() async {
+    final SharedPreferences prefs = await _prefs;
+
+    setState(() {
+      bestScore = prefs.getInt("game1BestScore") ?? playerPoint;
+    });
+    if (playerPoint >= bestScore) {
+      prefs.setInt("game1BestScore", playerPoint);
+    }
+
     print("End Game");
     timer.cancel();
+    setState(() {
+      gameOver = true;
+    });
   }
 
   createQuestion() {

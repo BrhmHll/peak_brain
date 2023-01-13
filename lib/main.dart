@@ -78,4 +78,13 @@ class MyApp extends StatelessWidget {
       home: Home(),
     );
   }
+
+  // void callStaticMethodOnClass(String className, String methodName) {
+  //   final classSymbol = Symbol(className);
+  //   final methodSymbol = Symbol(methodName);
+
+  //   (currentMirrorSystem().isolate.rootLibrary.declarations[classSymbol]
+  //           as ClassMirror)
+  //       .invoke(methodSymbol, <dynamic>[]);
+  // }
 }

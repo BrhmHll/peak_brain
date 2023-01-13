@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:peak_brain/constants/colors.dart';
 import 'package:peak_brain/widgets/custom_answer_button.dart';
 
 class AnswerButtons extends StatefulWidget {
@@ -14,6 +15,10 @@ class AnswerButtons extends StatefulWidget {
   final List<String> buttonTexts;
   List<Color> buttonColors;
   final Null Function(CustomAnswerButton widget) buttonPress;
+
+  static List<Color> get defaultButtonColors {
+    return [gmPriColor, gmPriColor, gmPriColor, gmPriColor];
+  }
 
   @override
   State<AnswerButtons> createState() => _AnswerButtonsState();

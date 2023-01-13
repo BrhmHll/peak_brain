@@ -7,6 +7,7 @@ import 'package:peak_brain/model/question.dart';
 import 'package:peak_brain/widgets/answer_buttons.dart';
 import 'package:peak_brain/widgets/custom_answer_button.dart';
 import 'package:peak_brain/widgets/page_template.dart';
+import 'package:peak_brain/widgets/widgets.dart';
 
 class Game18 extends StatefulWidget {
   Game18({Key? key}) : super(key: key);
@@ -22,8 +23,8 @@ class _Game18State extends State<Game18> {
   List<int> playersIndex = [0, 0];
   List<int> playersPoint = [0, 0];
   List<List<Color>> buttonColors = [
-    CustomAnswerButton.defaultButtonColors,
-    CustomAnswerButton.defaultButtonColors
+    AnswerButtons.defaultButtonColors,
+    AnswerButtons.defaultButtonColors
   ];
   int winnerPlayer = -1;
   List<Question> questions = [];
@@ -179,23 +180,8 @@ class _Game18State extends State<Game18> {
               )),
           Visibility(
               visible: winnerPlayer == player,
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      height: size.height * 0.1,
-                      child: IconButton(
-                        onPressed: () {
-                          restartGame();
-                        },
-                        icon: Image.asset(
-                          "assets/images/restart.png",
-                          width: size.width * 0.15,
-                        ),
-                        iconSize: size.width * 0.15,
-                      )),
-                ),
-              )),
+              child: Widgets.buildRestartButton(
+                  restartFunc: restartGame, size: size.height * 0.1)),
         ],
       ),
     );
@@ -206,7 +192,7 @@ class _Game18State extends State<Game18> {
       if (playersPoint[player] == targetPoint - 1) {
         setState(() {
           playersPoint[player] = targetPoint;
-          buttonColors[player] = CustomAnswerButton.defaultButtonColors;
+          buttonColors[player] = AnswerButtons.defaultButtonColors;
           ;
         });
         win(player);
@@ -215,14 +201,15 @@ class _Game18State extends State<Game18> {
       setState(() {
         playersPoint[player] += 1;
         playersIndex[player] += 1;
-        buttonColors[player] = [gmPriColor, gmPriColor, gmPriColor, gmPriColor];
+        buttonColors[player] = AnswerButtons.defaultButtonColors;
       });
 
       if (questions.length == (questionIndex + 1)) {
         createQuestion();
       }
     } else {
-      if (playersPoint[player] != 0) {
+      if (playersPoint[player] != 0 &&
+          buttonColors[player][buttonWidget.index] == gmPriColor) {
         setState(() {
           playersPoint[player] -= 1;
         });

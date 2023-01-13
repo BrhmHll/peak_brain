@@ -11,4 +11,4 @@ const Color tdBGColor = Color(0XFFEEEFF5);
 
 const Color gmBGColor = Color(0XFF303030);
 const Color gmPriColor = Color(0XFF587A9F);
-const Color tdWhiteColor = Color(0XFFEEEFF5);
+const Color gmWhiteColor = Color(0XFFEEEFF5);

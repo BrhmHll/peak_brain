@@ -5,7 +5,7 @@ const double fontSize = 40;
 
 const TextStyle answerTextStyle = TextStyle(
   fontSize: fontSize,
-  color: tdWhiteColor,
+  color: gmWhiteColor,
 );
 const TextStyle questionTextStyle = TextStyle(
   fontSize: fontSize,

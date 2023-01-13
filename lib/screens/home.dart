@@ -17,6 +17,10 @@ class _HomeState extends State<Home> {
   final _todoController = TextEditingController();
   Size size = const Size(0, 0);
 
+  //Playable Games
+  var activGames = [1, 2, 18];
+  //Playable Games
+
   @override
   void initState() {
     _foundToDo = todosList;
@@ -69,9 +73,9 @@ class _HomeState extends State<Home> {
 
   Widget buildGameButton(int index) {
     var gameName = "game" + (index + 1).toString();
-    var activGames = ["game18", "game1"];
+    //Playable Games Check
     var btnActive = true;
-    if (!activGames.contains(gameName)) {
+    if (!activGames.contains(index + 1)) {
       btnActive = false;
     }
     return Container(
@@ -85,7 +89,7 @@ class _HomeState extends State<Home> {
             Navigator.pushNamed(context, '/' + gameName);
           },
           icon: Image.asset("assets/images/" + gameName + ".png",
-              width: size.width * 0.15),
+              width: size.width * 0.135 * (btnActive ? 1 : 0.5)),
         ));
   }
 
