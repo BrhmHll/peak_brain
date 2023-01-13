@@ -22,8 +22,8 @@ class _Game18State extends State<Game18> {
   List<int> playersIndex = [0, 0];
   List<int> playersPoint = [0, 0];
   List<List<Color>> buttonColors = [
-    [gmPriColor, gmPriColor, gmPriColor, gmPriColor],
-    [gmPriColor, gmPriColor, gmPriColor, gmPriColor]
+    CustomAnswerButton.defaultButtonColors,
+    CustomAnswerButton.defaultButtonColors
   ];
   int winnerPlayer = -1;
   List<Question> questions = [];
@@ -173,7 +173,7 @@ class _Game18State extends State<Game18> {
                 child: Container(
                     height: size.height * 0.25,
                     child: Image.asset(
-                      "assets/images/cup.jpeg",
+                      "assets/images/cup.png",
                       width: size.width * 0.2,
                     )),
               )),
@@ -189,7 +189,7 @@ class _Game18State extends State<Game18> {
                           restartGame();
                         },
                         icon: Image.asset(
-                          "assets/images/restart.jpeg",
+                          "assets/images/restart.png",
                           width: size.width * 0.15,
                         ),
                         iconSize: size.width * 0.15,
@@ -206,12 +206,8 @@ class _Game18State extends State<Game18> {
       if (playersPoint[player] == targetPoint - 1) {
         setState(() {
           playersPoint[player] = targetPoint;
-          buttonColors[player] = [
-            gmPriColor,
-            gmPriColor,
-            gmPriColor,
-            gmPriColor
-          ];
+          buttonColors[player] = CustomAnswerButton.defaultButtonColors;
+          ;
         });
         win(player);
         return;
